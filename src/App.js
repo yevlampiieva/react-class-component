@@ -8,6 +8,7 @@ import initialTodos from "./components/todos.json";
 // import { Form } from "./components/Form/Form";
 import { TodoEditor } from "./components/TodoEditor/TodoEditor";
 import { Filter } from "./components/Filter/Filter";
+import Modal from "./components/Modal/Modal";
 
 // const colorPickerOptions = [
 //   { label: "red", color: "#F44336" },
@@ -20,9 +21,32 @@ import { Filter } from "./components/Filter/Filter";
 
 class App extends Component {
   state = {
+    // todos: [],
     todos: initialTodos,
     filter: "",
+    showModal: false,
   };
+
+  componentDidMount() {
+    const todos = localStorage.getItem("todos");
+
+    const parsedTodos = JSON.parse(todos);
+    if (parsedTodos) {
+      this.setState({ todos: parsedTodos });
+    }
+
+    // setTimeout(() => {
+    //   this.setState({ todos: parsedTodos });
+    // }, 2000);
+  }
+
+  componentDidUpdate(prevState, prevProps) {
+    const nextTodos = this.state.todos;
+    const prevTodos = prevState.todos;
+    if (nextTodos !== prevTodos) {
+      localStorage.setItem("todos", JSON.stringify(nextTodos));
+    }
+  }
 
   addTodo = (text) => {
     const todo = {
@@ -64,8 +88,15 @@ class App extends Component {
     return todos.reduce((acc, todo) => (todo.completed ? acc + 1 : acc), 0);
   };
 
+  // toggleModal = () => {
+  //   this.setState((state) => ({ showModal: !state.showModal }));
+  // };
+  toggleModal = () => {
+    this.setState(({ showModal }) => ({ showModal: !showModal }));
+  };
+
   render() {
-    const { todos, filter } = this.state;
+    const { todos, filter, showModal } = this.state;
 
     // const completedTodos = todos.filter(todo => todo.completed);
     // console.log(completedTodos.length);
@@ -76,12 +107,23 @@ class App extends Component {
 
     return (
       <>
-        {/* <Form onSubmit={this.formSubmitHandler} /> */}
-        <h1>Состояние компонента</h1>
-        {/* <Counter /> */}
-        {/* <Counter initialValue={10} /> */}
-        {/* <Dropdown />      */}
-        {/* <ColorPicker options={colorPickerOptions} /> */}
+        <button type="button" onClick={this.toggleModal}>
+          Open Modal
+        </button>
+        {showModal && (
+          <Modal onClose={this.toggleModal}>
+            <h1>Hello, this is content of Modal like children</h1>
+            <p>
+              A tiny VS Code extension made up of a few commands that generate and insert lorem
+              ipsum text into a text file. To use the extension, open the command palette (F1 or
+              cmd/ctrl+shift+p, type "lorem ipsum" and select to insert either a line or paragraph
+            </p>
+            <button type="button" onClick={this.toggleModal}>
+              Close Modal
+            </button>
+          </Modal>
+        )}
+
         <TodoEditor onSubmit={this.addTodo} />
         <Filter filter={filter} onChange={this.changeFilter} />
         <TodoList todos={visibleTodos} onDeleteTodo={this.deleteTodo} />
@@ -89,6 +131,13 @@ class App extends Component {
           <p>Загальна кількість: {totalTodos}</p>
           <p>Кількість виконаних: {completedTodos}</p>
         </div>
+
+        {/* <Form onSubmit={this.formSubmitHandler} /> */}
+        {/* <h1>Состояние компонента</h1> */}
+        {/* <Counter /> */}
+        {/* <Counter initialValue={5} /> */}
+        {/* <Dropdown />      */}
+        {/* <ColorPicker options={colorPickerOptions} /> */}
       </>
     );
   }
@@ -98,10 +147,10 @@ class App extends Component {
 //   return (
 //     <>
 //       <h1>Состояние компонента</h1>
-//       {/* <Counter /> */}
-//       {/* <Counter initialValue={10} /> */}
-//       {/* <Dropdown />      */}
-//       {/* <ColorPicker options={colorPickerOptions} /> */}
+//       <Counter />
+//       <Counter initialValue={5} />
+//       <Dropdown />
+//       <ColorPicker options={colorPickerOptions} />
 //       <TodoList />
 //     </>
 //   );

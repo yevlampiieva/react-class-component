@@ -1,17 +1,15 @@
 .TodoList {
   width: 600px;
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-gap: 24px;
 }
 
 .TodoList__item {
-  display: flex;
+  display: flex;  
   align-items: center;
-  justify-content: space-between;
   padding: 20px;
   border: 1px solid black;
-}
-
-.TodoList__text {
-  margin-top: 0;
-  margin-bottom: 0;
-  margin-right: 10px;
+  border-radius: 4px;
 }

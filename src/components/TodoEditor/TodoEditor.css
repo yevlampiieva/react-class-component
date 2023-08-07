@@ -25,7 +25,10 @@
 }
 
 .TodoEditor__button {
-  @extend %button;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  outline: none;
 
   width: 100%;
   margin-left: auto;
